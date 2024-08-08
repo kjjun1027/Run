@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float jumpForce = 10f;      // 점프 힘
+    private HealthBar healthBar;
+
+    public float jumpForce = 5f;      // 점프 힘
     public int maxJumps = 2;           // 최대 점프 횟수
     public float slideDuration = 1f;   // 슬라이드 지속 시간
 
@@ -17,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        healthBar = GetComponent<HealthBar>();
         rb = GetComponent<Rigidbody2D>();
         jumpCount = 0;
         isSliding = false;
@@ -51,6 +54,15 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             jumpCount = 0;
+        }
+        
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Obstacle"))
+        {
+            // 장애물과 충돌 시 데미지 처리
+            healthBar.TakeDamage(20);
         }
     }
 

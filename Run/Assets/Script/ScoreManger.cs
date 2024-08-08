@@ -1,26 +1,22 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public TextMeshProUGUI scoreText;
+    private Score score; // Score 참조
     private int currentScore = 0;
-
-    public void Start()
-    {
-        scoreText.text = "Score: " + currentScore.ToString();
-    }
 
     private void Awake()
     {
-        // 싱글톤 인스턴스 설정
+        // 싱글톤 패턴 설정
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 이 오브젝트는 씬 전환 시 파괴되지 않음
+            DontDestroyOnLoad(gameObject); // 씬 전환 시에도 오브젝트를 유지
         }
         else
         {
@@ -28,23 +24,38 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+    // ScoreDisplay 할당 메서드
+    public void SetScore(Score scores)
+    {
+        score = scores;
+    }
+
     // 점수 추가 메서드
     public void AddScore(int scoreValue)
     {
         currentScore += scoreValue;
-        UpdateScoreUI();
-    }
-
-    // 점수 UI 업데이트 메서드
-    private void UpdateScoreUI()
-    {
-        scoreText.text = "Score: " + currentScore.ToString();
+        UpdateScoreDisplay();
     }
 
     // 점수 초기화 메서드
     public void ResetScore()
     {
         currentScore = 0;
-        UpdateScoreUI();
+        UpdateScoreDisplay();
+    }
+
+    // 점수 업데이트 메서드
+    private void UpdateScoreDisplay()
+    {
+        if (score != null)
+        {
+            score.UpdateScoreUI(currentScore);
+        }
+    }
+
+    // 현재 점수 반환 메서드
+    public int GetScore()
+    {
+        return currentScore;
     }
 }

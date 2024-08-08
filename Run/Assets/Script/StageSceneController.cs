@@ -2,11 +2,25 @@ using UnityEngine;
 
 public class StageSceneController : MonoBehaviour
 {
+
+    public static StageSceneController Instance { get; private set; }
     public Transform mapSpawnPoint; // 맵이 배치될 위치
     public Transform characterSpawnPoint; // 캐릭터가 배치될 위치
 
     private string stageName;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         // PlayerPrefs에서 스테이지 이름을 불러옴
